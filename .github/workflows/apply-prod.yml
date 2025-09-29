@@ -1,0 +1,51 @@
+name: deploy
+
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+    
+jobs:
+  
+  before-prod:
+    runs-on: ubuntu-latest
+    
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Say before-prod
+        run: echo "This is job before-prod!"
+  
+  prod:
+    runs-on: ubuntu-latest
+    
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+
+    environment: Production
+    
+    needs: [before-prod]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Say prod
+        run: echo "This is job prod!"
+
+  after-prod:
+    runs-on: ubuntu-latest
+    
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+    
+    needs: [prod]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Say after-prod
+        run: echo "This is job after-prod"
+  
