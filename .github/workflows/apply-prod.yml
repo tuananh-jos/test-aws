@@ -1,19 +1,12 @@
 name: deploy
 
-on: [push]
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
     
 jobs:
   
-  test-job:
-    runs-on: ubuntu-latest
-    
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Say test-job
-        run: echo "This is job for testing!"
-
   before-prod:
     runs-on: ubuntu-latest
     
